@@ -1,10 +1,10 @@
 package mf.fit.repository;
 
-import mf.fit.entity.Zgrada;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.EntityManager;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import mf.fit.entity.Zgrada;
 
 import java.util.List;
 
@@ -27,15 +27,26 @@ public class ZgradaRepository {
         return em.find(Zgrada.class, id);
     }
 
+    public List<Zgrada> findByGrad(String grad) {
+        return em.createQuery("SELECT z FROM Zgrada z WHERE z.grad = :grad", Zgrada.class)
+                .setParameter("grad", grad)
+                .getResultList();
+    }
+
+    public List<Zgrada> findByNaziv(String naziv) {
+        return em.createQuery("SELECT z FROM Zgrada z WHERE z.naziv = :naziv", Zgrada.class)
+                .setParameter("naziv", naziv)
+                .getResultList();
+    }
+
     @Transactional
     public Zgrada update(Long id, Zgrada updatedZgrada) {
         Zgrada existing = em.find(Zgrada.class, id);
 
         if (existing == null) {
-            return null; // ili throw new RuntimeException("Zgrada ne postoji");
+            return null;
         }
 
-        // update polja
         existing.setNaziv(updatedZgrada.getNaziv());
         existing.setVlasnik(updatedZgrada.getVlasnik());
         existing.setGrad(updatedZgrada.getGrad());

@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import mf.fit.entity.Obavjestenje;
 import mf.fit.service.ObavjestenjeService;
-
+import jakarta.annotation.security.RolesAllowed;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +29,7 @@ public class ObavjestenjeResource {
         }
     }
 
+
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
@@ -47,6 +48,7 @@ public class ObavjestenjeResource {
     }
 
     @POST
+    @RolesAllowed("admin")
     public Response create(Obavjestenje o) {
         try {
             service.create(o);

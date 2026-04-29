@@ -36,7 +36,7 @@
 
     <dependencies>
 
-        <!-- QUARKUS -->
+        <!-- QUARKUS REST -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest</artifactId>
@@ -44,12 +44,13 @@
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm</artifactId>
+            <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
 
+        <!-- DATABASE / JPA -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-rest-jackson</artifactId>
+            <artifactId>quarkus-hibernate-orm</artifactId>
         </dependency>
 
         <dependency>
@@ -57,9 +58,28 @@
             <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
 
+        <!-- CDI -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
+        </dependency>
+
+        <!-- KEYCLOAK / OIDC SECURITY -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc</artifactId>
+        </dependency>
+
+        <!-- REST CLIENT FOR EXTERNAL APIs -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-client-jackson</artifactId>
+        </dependency>
+
+        <!-- OPENAPI / SWAGGER UI -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
 
         <!-- LOMBOK -->
@@ -154,4 +174,5 @@
             </properties>
         </profile>
     </profiles>
+
 </project>

@@ -1,5 +1,6 @@
 package mf.fit.entity;
-
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +21,8 @@ public class Stanar {
     @JoinColumn(name = "stan_id")
     private Stan stan;
 
+    @OneToMany(mappedBy = "stanar", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TimezoneInfo> timezoneInfos = new ArrayList<>();
     // GETTERS & SETTERS
     public Long getId() { return id; }
 
@@ -43,4 +46,11 @@ public class Stanar {
 
     public boolean getStarjesina(){return starjesina;}
     public void setStarjesina(boolean starjesina){this.starjesina = starjesina;}
+    public List<TimezoneInfo> getTimezoneInfos() {
+        return timezoneInfos;
+    }
+
+    public void setTimezoneInfos(List<TimezoneInfo> timezoneInfos) {
+        this.timezoneInfos = timezoneInfos;
+    }
 }

@@ -1,16 +1,9 @@
 package mf.fit.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 public class Zgrada {
 
     @Id
@@ -24,16 +17,16 @@ public class Zgrada {
     @OneToMany(mappedBy = "zgrada", fetch = FetchType.LAZY)
     private List<Ulaz> ulazi;
 
+    public Long getId() {
+        return id;
+    }
+
     public String getNaziv() {
         return naziv;
     }
 
-    public String getGrad() {
-        return grad;
-    }
-
-    public void setGrad(String grad) {
-        this.grad = grad;
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
     }
 
     public String getVlasnik() {
@@ -44,13 +37,19 @@ public class Zgrada {
         this.vlasnik = vlasnik;
     }
 
-    public void setNaziv(String naziv) {
-        this.naziv = naziv;
+    public String getGrad() {
+        return grad;
     }
 
-    public Long getId() {
-        return id;
+    public void setGrad(String grad) {
+        this.grad = grad;
     }
 
+    public List<Ulaz> getUlazi() {
+        return ulazi;
+    }
 
+    public void setUlazi(List<Ulaz> ulazi) {
+        this.ulazi = ulazi;
+    }
 }
