@@ -2,6 +2,7 @@ package mf.fit.entity;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.*;
+import mf.fit.dto.CurrencyResponse;
 
 @Entity
 public class Stanar {
@@ -23,6 +24,10 @@ public class Stanar {
 
     @OneToMany(mappedBy = "stanar", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimezoneInfo> timezoneInfos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "stanar", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CurrencyResponse> currencyResponses = new ArrayList<>();
+
     // GETTERS & SETTERS
     public Long getId() { return id; }
 
@@ -44,13 +49,21 @@ public class Stanar {
     public String getPassword(){return password;}
     public void setPassword(String password){this.password = password;}
 
-    public boolean getStarjesina(){return starjesina;}
-    public void setStarjesina(boolean starjesina){this.starjesina = starjesina;}
+    public Boolean getStarjesina(){return starjesina;}
+    public void setStarjesina(Boolean starjesina){this.starjesina = starjesina;}
     public List<TimezoneInfo> getTimezoneInfos() {
         return timezoneInfos;
     }
 
     public void setTimezoneInfos(List<TimezoneInfo> timezoneInfos) {
         this.timezoneInfos = timezoneInfos;
+    }
+
+    public List<CurrencyResponse> getCurrencyResponses() {
+        return currencyResponses;
+    }
+
+    public void setCurrencyResponses(List<CurrencyResponse> currencyResponses) {
+        this.currencyResponses = currencyResponses;
     }
 }

@@ -34,10 +34,9 @@ public class StanarRepository {
         Stanar existing = em.find(Stanar.class, id);
 
         if (existing == null) {
-            return null; // možeš i baciti exception
+            return null;
         }
 
-        // update svih polja
         existing.setIme(updatedStanar.getIme());
         existing.setPrezime(updatedStanar.getPrezime());
         existing.setBrTelefona(updatedStanar.getBrTelefona());

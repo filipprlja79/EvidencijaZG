@@ -1,5 +1,6 @@
 package mf.fit.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import mf.fit.entity.Ulaz;
 import mf.fit.entity.Zgrada;
 import mf.fit.service.ZgradaService;
@@ -14,6 +15,7 @@ import java.util.List;
 @Path("/zgrade")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("admin")
 public class ZgradaResource {
 
     @Inject
