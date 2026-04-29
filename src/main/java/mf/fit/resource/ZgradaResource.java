@@ -1,5 +1,6 @@
 package mf.fit.resource;
 
+import mf.fit.entity.Ulaz;
 import mf.fit.entity.Zgrada;
 import mf.fit.service.ZgradaService;
 
@@ -18,13 +19,11 @@ public class ZgradaResource {
     @Inject
     ZgradaService service;
 
-    // GET ALL
     @GET
     public List<Zgrada> list() {
         return service.list();
     }
 
-    // GET BY ID
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
@@ -32,22 +31,37 @@ public class ZgradaResource {
             Zgrada zgrada = service.getById(id);
             return Response.ok(zgrada).build();
         } catch (RuntimeException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(e.getMessage())
-                    .build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
 
-    // CREATE
+    @GET
+    @Path("/pretraga")
+    public Response pretraziPoGradu(@QueryParam("grad") String grad) {
+        if (grad == null || grad.isBlank()) {
+            return Response.status(400).entity("Parametar 'grad' je obavezan").build();
+        }
+        return Response.ok(service.findByGrad(grad)).build();
+    }
+
+    @GET
+    @Path("/naziv/{naziv}")
+    public Response pretraziPoNazivu(@PathParam("naziv") String naziv) {
+        return Response.ok(service.findByNaziv(naziv)).build();
+    }
+
+    @GET
+    @Path("/{id}/ulazi")
+    public Response getUlazi(@PathParam("id") Long id) {
+        return Response.ok(service.getUlaziZaZgradu(id)).build();
+    }
+
     @POST
     public Response create(Zgrada zgrada) {
         Zgrada created = service.create(zgrada);
-        return Response.status(Response.Status.CREATED)
-                .entity(created)
-                .build();
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
-    // UPDATE
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, Zgrada zgrada) {
@@ -55,13 +69,10 @@ public class ZgradaResource {
             Zgrada updated = service.update(id, zgrada);
             return Response.ok(updated).build();
         } catch (RuntimeException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(e.getMessage())
-                    .build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
 
-    // DELETE
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
@@ -69,9 +80,7 @@ public class ZgradaResource {
             service.delete(id);
             return Response.noContent().build();
         } catch (RuntimeException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(e.getMessage())
-                    .build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
 }

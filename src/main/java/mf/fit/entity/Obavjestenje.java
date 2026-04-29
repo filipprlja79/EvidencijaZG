@@ -13,13 +13,15 @@ public class Obavjestenje {
     private String naslov;
     private String tekst;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "stanar_obavjestenje",
             joinColumns = @JoinColumn(name = "obavjestenje_id"),
             inverseJoinColumns = @JoinColumn(name = "stanar_id")
     )
     private List<Stanar> stanari;
+
+
 
     // GETTERS & SETTERS
     public Long getId() { return id; }

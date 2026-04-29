@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -19,6 +21,8 @@ public class Zgrada {
     private String vlasnik;
     private String grad;
 
+    @OneToMany(mappedBy = "zgrada", fetch = FetchType.LAZY)
+    private List<Ulaz> ulazi;
 
     public String getNaziv() {
         return naziv;
