@@ -3,6 +3,7 @@ package mf.fit.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 import mf.fit.client.CurrencyClient;
 import mf.fit.dto.CurrencyResponse;
 import mf.fit.entity.Stanar;
@@ -36,6 +37,8 @@ public class CurrencyService {
 
         CurrencyResponse response = convert(from, to, value);
         response.setStanar(stanar);
+        double v = response.getRate() * value;
+        response.setConvertedValue(v * response.getRate());
         stanar.getCurrencyResponses().add(response);
 
         return response;
