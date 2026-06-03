@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Repository sloj koji centralizuje rad sa bazom preko EntityManager-a.
+ */
+
 package mf.fit.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -103,3 +107,4 @@ public class ZgradaRepository {
         return value == null || value.isBlank() ? null : value.trim();
     }
 }
+

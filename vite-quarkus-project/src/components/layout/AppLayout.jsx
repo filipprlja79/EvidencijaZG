@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Layout komponenta koja gradi osnovni raspored aplikacije, navigaciju i gornju traku.
+ */
+
 import { useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useRole } from '../../context/RoleContext.jsx'
@@ -33,3 +37,4 @@ export default function AppLayout() {
     </div>
   )
 }
+

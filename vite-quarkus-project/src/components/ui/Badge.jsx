@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 const variantMap = {
   success: 'badge-success',
   warning: 'badge-warning',
@@ -9,3 +13,4 @@ const variantMap = {
 export default function Badge({ children, variant = 'neutral' }) {
   return <span className={`badge ${variantMap[variant] || variantMap.neutral}`}>{children}</span>
 }
+

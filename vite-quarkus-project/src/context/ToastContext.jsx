@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: React context koji dijeli globalno stanje kroz aplikaciju bez prop drilling-a.
+ */
+
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import Toast from '../components/ui/Toast.jsx'
 
@@ -35,3 +39,4 @@ export function useToast() {
   }
   return context
 }
+

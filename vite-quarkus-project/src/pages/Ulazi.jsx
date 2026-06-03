@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { useEffect, useMemo, useState } from 'react'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { ulaziApi } from '../api/ulaziApi.js'
@@ -44,7 +48,7 @@ export default function Ulazi() {
       setItems(ulaziResult.status === 'fulfilled' ? ulaziResult.value : mockUlazi)
       setZgrade(zgradeResult.status === 'fulfilled' ? zgradeResult.value : mockZgrade)
       setStanovi(stanoviResult.status === 'fulfilled' ? stanoviResult.value : mockStanovi)
-      setError(ulaziResult.status === 'rejected' ? 'API nije dostupan za ulaze. Prikazani su demo podaci.' : '')
+      setError(ulaziResult.status === 'rejected' ? ' Prikazani su demo podaci.' : '')
       setLoading(false)
     }
     load()
@@ -186,3 +190,4 @@ export default function Ulazi() {
     </section>
   )
 }
+

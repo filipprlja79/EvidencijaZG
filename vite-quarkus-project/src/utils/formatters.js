@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Pomocne funkcije za formatiranje i sitne transformacije podataka na frontend-u.
+ */
+
 export function fullName(stanar) {
   return [stanar?.ime, stanar?.prezime].filter(Boolean).join(' ') || '-'
 }
@@ -33,3 +37,4 @@ export function compactId(prefix, id) {
 export function nextLocalId(items) {
   return Math.max(0, ...items.map((item) => Number(item.id || 0))) + 1
 }
+

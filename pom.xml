@@ -5,11 +5,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Osnovni Maven identitet backend aplikacije. -->
     <groupId>mf.fit</groupId>
     <artifactId>filipprlja</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>quarkus</packaging>
 
+    <!-- Verzije plugina i Quarkus platforme centralizovane su ovdje da se lakse odrzavaju. -->
     <properties>
         <compiler-plugin.version>3.15.0</compiler-plugin.version>
         <maven.compiler.release>25</maven.compiler.release>
@@ -24,6 +26,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Quarkus BOM zakljucava kompatibilne verzije svih Quarkus dependency-ja. -->
             <dependency>
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>${quarkus.platform.artifact-id}</artifactId>
@@ -119,6 +122,7 @@
     <build>
         <plugins>
 
+            <!-- Quarkus Maven plugin omogucava dev mode, build i generisanje Quarkus aplikacije. -->
             <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
@@ -126,6 +130,7 @@
                 <extensions>true</extensions>
             </plugin>
 
+            <!-- Compiler plugin kompajlira Java kod i cuva informacije o parametrima metoda. -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${compiler-plugin.version}</version>
@@ -134,6 +139,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Surefire pokrece unit testove. -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
@@ -146,6 +152,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Failsafe je predvidjen za integration testove i native build provjere. -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
@@ -173,6 +180,7 @@
     <profiles>
         <profile>
             <id>native</id>
+            <!-- Native profil se aktivira sa -Dnative i priprema GraalVM native executable build. -->
             <activation>
                 <property>
                     <name>native</name>

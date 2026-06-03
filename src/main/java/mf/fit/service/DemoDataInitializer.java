@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Service sloj koji sadrzi poslovnu logiku i koordinise repository-je, validacije i spoljasnje servise.
+ */
+
 package mf.fit.service;
 
 import io.quarkus.runtime.StartupEvent;
@@ -151,3 +155,4 @@ public class DemoDataInitializer {
         existing.setStan(stan);
     }
 }
+

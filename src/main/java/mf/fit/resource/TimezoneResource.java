@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: REST resource sloj koji definise HTTP endpoint-e dostupne frontend aplikaciji.
+ */
+
 package mf.fit.resource;
 
 import jakarta.annotation.security.RolesAllowed;
@@ -35,3 +39,4 @@ public class TimezoneResource {
         }
     }
 }
+

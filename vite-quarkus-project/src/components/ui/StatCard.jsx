@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 export default function StatCard({ icon: Icon, label, value, trend, tone = 'primary' }) {
   return (
     <article className="stat-card">
@@ -12,3 +16,4 @@ export default function StatCard({ icon: Icon, label, value, trend, tone = 'prim
     </article>
   )
 }
+

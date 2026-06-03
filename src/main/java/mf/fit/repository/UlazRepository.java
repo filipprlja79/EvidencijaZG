@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Repository sloj koji centralizuje rad sa bazom preko EntityManager-a.
+ */
+
 package mf.fit.repository;
 
 import mf.fit.entity.Ulaz;
@@ -86,3 +90,4 @@ public class UlazRepository {
         return value == null || value.isBlank() ? null : value.trim();
     }
 }
+

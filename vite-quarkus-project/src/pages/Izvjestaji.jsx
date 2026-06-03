@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { BarChart3, Download, Euro, FileSpreadsheet, TrendingUp } from 'lucide-react'
 import Button from '../components/ui/Button.jsx'
 import PageHeader from '../components/ui/PageHeader.jsx'
@@ -33,3 +37,4 @@ export default function Izvjestaji() {
     </section>
   )
 }
+

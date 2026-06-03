@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: REST resource sloj koji definise HTTP endpoint-e dostupne frontend aplikaciji.
+ */
+
 package mf.fit.resource;
 
 import jakarta.annotation.security.PermitAll;
@@ -97,3 +101,4 @@ public class PublicLookupResource {
         return new LookupOption(stan.getId(), "Stan " + stan.getBrojStana(), stan.getImeVlasnikaStana());
     }
 }
+

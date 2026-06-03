@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 import { useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import EmptyState from './EmptyState.jsx'
@@ -73,3 +77,4 @@ export default function DataTable({
     </div>
   )
 }
+

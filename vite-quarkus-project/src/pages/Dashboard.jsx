@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { useEffect, useState } from 'react'
 import { Building2, CreditCard, DoorOpen, Home, TrendingUp, Users } from 'lucide-react'
 import { dugovanjaApi } from '../api/dugovanjaApi.js'
@@ -63,7 +67,7 @@ export default function Dashboard() {
       if (!mounted) return
 
       const hasServerError = results.slice(0, 5).some((result) => result.status === 'rejected')
-      setError(hasServerError ? 'API nije vratio sve podatke. Prikazani su dostupni ili demo podaci.' : '')
+      setError(hasServerError ? ' Prikazani su dostupni ili demo podaci.' : '')
       setState({
         zgrade: results[0].status === 'fulfilled' ? results[0].value : mockZgrade,
         ulazi: results[1].status === 'fulfilled' ? results[1].value : mockUlazi,
@@ -158,3 +162,4 @@ export default function Dashboard() {
     </section>
   )
 }
+

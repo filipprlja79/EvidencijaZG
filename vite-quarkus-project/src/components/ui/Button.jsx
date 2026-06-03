@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 export default function Button({
   children,
   variant = 'primary',
@@ -24,3 +28,4 @@ export default function Button({
     </button>
   )
 }
+

@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: REST klijent koji poziva spoljasnji servis i vraca podatke backend servisima.
+ */
+
 package mf.fit.client;
 
 import jakarta.ws.rs.GET;
@@ -13,3 +17,4 @@ public interface CurrencyClient {
     @Path("/api/rates")
     CurrencyResponse getRate(@QueryParam("from") String from, @QueryParam("to") String to);
 }
+

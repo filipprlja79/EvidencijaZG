@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable form komponenta koja standardizuje unos podataka u formama.
+ */
+
 export default function FormCheckbox({ label, checked, onChange, error }) {
   return (
     <label className="form-checkbox">
@@ -7,3 +11,4 @@ export default function FormCheckbox({ label, checked, onChange, error }) {
     </label>
   )
 }
+

@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: CSS fajl koji definise vizuelni stil, raspored i responsive ponasanje aplikacije.
+ */
+
 .app-layout {
   min-height: 100vh;
   overflow-x: hidden;
@@ -228,3 +232,4 @@
     margin-left: 260px;
   }
 }
+

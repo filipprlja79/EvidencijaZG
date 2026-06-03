@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable form komponenta koja standardizuje unos podataka u formama.
+ */
+
 export default function FormSelect({ label, error, options = [], placeholder = 'Izaberi...', className = '', ...props }) {
   return (
     <label className={`form-field ${className}`}>
@@ -12,3 +16,4 @@ export default function FormSelect({ label, error, options = [], placeholder = '
     </label>
   )
 }
+

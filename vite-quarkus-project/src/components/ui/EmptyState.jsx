@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 import { Inbox } from 'lucide-react'
 
 export default function EmptyState({ title, description, action }) {
@@ -10,3 +14,4 @@ export default function EmptyState({ title, description, action }) {
     </div>
   )
 }
+

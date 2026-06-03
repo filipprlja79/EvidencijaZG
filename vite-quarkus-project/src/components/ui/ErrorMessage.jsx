@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 import { AlertTriangle } from 'lucide-react'
 
 export default function ErrorMessage({ message }) {
@@ -10,3 +14,4 @@ export default function ErrorMessage({ message }) {
     </div>
   )
 }
+

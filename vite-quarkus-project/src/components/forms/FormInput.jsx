@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable form komponenta koja standardizuje unos podataka u formama.
+ */
+
 export default function FormInput({ label, error, className = '', as = 'input', ...props }) {
   const Field = as
   return (
@@ -8,3 +12,4 @@ export default function FormInput({ label, error, className = '', as = 'input', 
     </label>
   )
 }
+

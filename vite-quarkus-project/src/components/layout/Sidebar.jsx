@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Layout komponenta koja gradi osnovni raspored aplikacije, navigaciju i gornju traku.
+ */
+
 import {
   Bell,
   Building2,
@@ -66,3 +70,4 @@ export default function Sidebar({ open, onClose }) {
     </>
   )
 }
+

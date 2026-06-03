@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: REST klijent koji poziva spoljasnji servis i vraca podatke backend servisima.
+ */
+
 package mf.fit.client;
 
 import jakarta.ws.rs.GET;
@@ -12,3 +16,4 @@ public interface TimeApiClient {
     @Path("/api/time/current/ip")
     TimezoneResponse getTimezoneByIp(@QueryParam("ipAddress") String ipAddress);
 }
+

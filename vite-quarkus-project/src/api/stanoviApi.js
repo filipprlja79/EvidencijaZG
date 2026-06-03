@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: API helper koji enkapsulira HTTP pozive prema Quarkus backend-u.
+ */
+
 import axiosClient from './axiosClient.js'
 
 export const stanoviApi = {
@@ -6,3 +10,4 @@ export const stanoviApi = {
   update: async (id, payload) => (await axiosClient.put(`/stanovi/${id}`, payload)).data,
   remove: async (id) => (await axiosClient.delete(`/stanovi/${id}`)).data,
 }
+

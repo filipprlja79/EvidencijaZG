@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { Database, Globe2, ShieldCheck } from 'lucide-react'
 import Badge from '../components/ui/Badge.jsx'
 import PageHeader from '../components/ui/PageHeader.jsx'
@@ -65,3 +69,4 @@ export default function Settings() {
     </section>
   )
 }
+

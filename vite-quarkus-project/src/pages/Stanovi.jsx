@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { useEffect, useMemo, useState } from 'react'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { stanariApi } from '../api/stanariApi.js'
@@ -214,3 +218,4 @@ export default function Stanovi() {
     </section>
   )
 }
+

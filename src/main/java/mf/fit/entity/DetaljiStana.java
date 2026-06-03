@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: JPA entitet koji predstavlja tabelu u bazi i opisuje podatke domena aplikacije.
+ */
+
 package mf.fit.entity;
 
 import jakarta.persistence.*;
@@ -50,3 +54,4 @@ public class DetaljiStana {
         this.stan = stan;
     }
 }
+

@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: JPA entitet koji predstavlja tabelu u bazi i opisuje podatke domena aplikacije.
+ */
+
 package mf.fit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,3 +46,4 @@ public class TimezoneInfo {
     public Stanar getStanar() { return stanar; }
     public void setStanar(Stanar stanar) { this.stanar = stanar; }
 }
+

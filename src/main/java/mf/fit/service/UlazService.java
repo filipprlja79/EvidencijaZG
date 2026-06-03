@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Service sloj koji sadrzi poslovnu logiku i koordinise repository-je, validacije i spoljasnje servise.
+ */
+
 package mf.fit.service;
 
 import mf.fit.entity.Ulaz;

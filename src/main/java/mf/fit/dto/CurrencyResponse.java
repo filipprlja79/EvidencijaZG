@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: DTO objekat koji prenosi podatke izmedju frontend-a i backend-a bez direktnog izlaganja kompletnih entiteta.
+ */
+
 package mf.fit.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -107,3 +111,4 @@ public class CurrencyResponse {
         this.stanar = stanar;
     }
 }
+

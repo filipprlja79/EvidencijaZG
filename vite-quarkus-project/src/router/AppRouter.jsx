@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Router konfiguracija koja povezuje URL putanje sa React stranicama.
+ */
+
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout.jsx'
 import Dashboard from '../pages/Dashboard.jsx'
@@ -39,3 +43,4 @@ export default function AppRouter() {
     </BrowserRouter>
   )
 }
+

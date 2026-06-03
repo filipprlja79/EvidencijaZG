@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: JPA entitet koji predstavlja tabelu u bazi i opisuje podatke domena aplikacije.
+ */
+
 package mf.fit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -54,3 +58,4 @@ public class BlokadaPoruka {
         this.kreiranoAt = kreiranoAt;
     }
 }
+

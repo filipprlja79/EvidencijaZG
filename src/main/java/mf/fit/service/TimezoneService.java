@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Service sloj koji sadrzi poslovnu logiku i koordinise repository-je, validacije i spoljasnje servise.
+ */
+
 package mf.fit.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -51,3 +55,4 @@ public class TimezoneService {
         return stanar;
     }
 }
+

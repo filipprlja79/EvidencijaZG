@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: REST resource sloj koji definise HTTP endpoint-e dostupne frontend aplikaciji.
+ */
+
 package mf.fit.resource;
 
 import jakarta.annotation.security.PermitAll;
@@ -94,3 +98,4 @@ public class AuthResource {
         throw new WebApplicationException("Lokalni profil nije pronadjen", 404);
     }
 }
+

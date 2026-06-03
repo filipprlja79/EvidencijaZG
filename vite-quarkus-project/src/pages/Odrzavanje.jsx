@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { useMemo, useState } from 'react'
 import { CheckCircle2, Clock, Plus, Wrench } from 'lucide-react'
 import Badge from '../components/ui/Badge.jsx'
@@ -41,3 +45,4 @@ export default function Odrzavanje() {
     </section>
   )
 }
+

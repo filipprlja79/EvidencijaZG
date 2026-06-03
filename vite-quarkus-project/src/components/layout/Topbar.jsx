@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Layout komponenta koja gradi osnovni raspored aplikacije, navigaciju i gornju traku.
+ */
+
 import { Bell, Menu, Plus } from 'lucide-react'
 import { useLocation } from 'react-router-dom'
 import { useRole } from '../../context/RoleContext.jsx'
@@ -47,3 +51,4 @@ export default function Topbar({ onMenuClick, search, onSearchChange }) {
     </header>
   )
 }
+

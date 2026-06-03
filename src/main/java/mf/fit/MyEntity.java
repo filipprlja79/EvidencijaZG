@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Pomocna/demo klasa iz Quarkus projekta.
+ */
+
 package mf.fit;
 
 import jakarta.persistence.Entity;
@@ -30,3 +34,4 @@ public class MyEntity {
 
     public String field;
 }
+

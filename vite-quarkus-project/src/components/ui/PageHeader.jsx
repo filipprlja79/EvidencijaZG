@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 export default function PageHeader({ title, subtitle, actions }) {
   return (
     <div className="page-header">
@@ -9,3 +13,4 @@ export default function PageHeader({ title, subtitle, actions }) {
     </div>
   )
 }
+

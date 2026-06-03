@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { useEffect, useMemo, useState } from 'react'
 import { BellRing, CheckCircle2, Pencil } from 'lucide-react'
 import { obavjestenjaApi } from '../api/obavjestenjaApi.js'
@@ -103,3 +107,4 @@ export default function Placanja() {
     </section>
   )
 }
+

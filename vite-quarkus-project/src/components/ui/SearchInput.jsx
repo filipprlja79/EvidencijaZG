@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 import { Search } from 'lucide-react'
 
 export default function SearchInput({ value, onChange, placeholder = 'Pretraži...', className = '' }) {
@@ -8,3 +12,4 @@ export default function SearchInput({ value, onChange, placeholder = 'Pretraži.
     </label>
   )
 }
+

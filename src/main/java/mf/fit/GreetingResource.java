@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Pomocna/demo klasa iz Quarkus projekta.
+ */
+
 package mf.fit;
 
 import jakarta.ws.rs.GET;
@@ -14,3 +18,4 @@ public class GreetingResource {
         return "Hello from Quarkus REST";
     }
 }
+

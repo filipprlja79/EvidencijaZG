@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 import Button from './Button.jsx'
 import Modal from './Modal.jsx'
 
@@ -26,3 +30,4 @@ export default function ConfirmDialog({
     />
   )
 }
+

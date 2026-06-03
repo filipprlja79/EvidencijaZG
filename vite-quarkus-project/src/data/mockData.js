@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Demo podaci koji se koriste kada API nije dostupan ili za lokalni prikaz.
+ */
+
 export const mockZgrade = [
   { id: 1, naziv: 'Zgrada Central', vlasnik: 'Etažni vlasnici', grad: 'Podgorica', naselje: 'City kvart' },
   { id: 2, naziv: 'Rezidencija Morača', vlasnik: 'Invest Mont', grad: 'Podgorica', naselje: 'Preko Morače' },
@@ -53,3 +57,4 @@ export const mockPrekrsaji = [
   { id: 1, stanar: mockStanari[1], stan: mockStanovi[1], pravilo: 'Stvari u hodniku', status: 'Otvoreno', datum: '2026-05-04', napomena: 'Bicikl ostavljen ispred vrata.' },
   { id: 2, stanar: mockStanari[2], stan: mockStanovi[2], pravilo: 'Buka poslije 22h', status: 'Riješeno', datum: '2026-04-29', napomena: 'Upozorenje prihvaćeno.' },
 ]
+

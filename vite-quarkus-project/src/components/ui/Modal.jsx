@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
+ */
+
 import { X } from 'lucide-react'
 import Button from './Button.jsx'
 
@@ -20,3 +24,4 @@ export default function Modal({ open, title, description, children, footer, onCl
     </div>
   )
 }
+

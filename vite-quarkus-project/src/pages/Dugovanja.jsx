@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja jednu funkcionalnu stranicu aplikacije.
+ */
+
 import { useEffect, useMemo, useState } from 'react'
 import { BellRing, Euro, Users } from 'lucide-react'
 import { dugovanjaApi } from '../api/dugovanjaApi.js'
@@ -61,3 +65,4 @@ export default function Dugovanja() {
     </section>
   )
 }
+

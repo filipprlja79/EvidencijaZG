@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: JPA entitet koji predstavlja tabelu u bazi i opisuje podatke domena aplikacije.
+ */
+
 package mf.fit.entity;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,3 +102,4 @@ public class Stanar {
         this.currencyResponses = currencyResponses;
     }
 }
+

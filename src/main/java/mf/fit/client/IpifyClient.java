@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: REST klijent koji poziva spoljasnji servis i vraca podatke backend servisima.
+ */
+
 package mf.fit.client;
 
 import jakarta.ws.rs.GET;
@@ -11,3 +15,4 @@ public interface IpifyClient {
     @Produces(MediaType.TEXT_PLAIN)
     String getIpAddress();
 }
+
