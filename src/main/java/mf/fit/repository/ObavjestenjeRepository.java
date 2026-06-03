@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Repository sloj koji centralizuje rad sa bazom preko EntityManager-a.
+ */
+
 package mf.fit.repository;
 
 import mf.fit.entity.Obavjestenje;
@@ -38,6 +42,16 @@ public class ObavjestenjeRepository {
                 .getResultList();
     }
 
+    public List<Obavjestenje> findByUploadedFileId(Long uploadedFileId) {
+        return em.createQuery("""
+                        SELECT o FROM Obavjestenje o
+                        JOIN o.uploadedFiles f
+                        WHERE f.id = :uploadedFileId
+                        """, Obavjestenje.class)
+                .setParameter("uploadedFileId", uploadedFileId)
+                .getResultList();
+    }
+
     public void delete(Long id) {
         Obavjestenje o = em.find(Obavjestenje.class, id);
         if (o != null) {
@@ -45,3 +59,4 @@ public class ObavjestenjeRepository {
         }
     }
 }
+

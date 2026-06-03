@@ -1,3 +1,7 @@
+/*
+ * Komentar projekta: Service sloj koji sadrzi poslovnu logiku i koordinise repository-je, validacije i spoljasnje servise.
+ */
+
 package mf.fit.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -7,12 +11,14 @@ import jakarta.ws.rs.WebApplicationException;
 import mf.fit.dto.MessageRequest;
 import mf.fit.entity.Obavjestenje;
 import mf.fit.entity.Stanar;
+import mf.fit.entity.UploadedFile;
 import mf.fit.entity.Ulaz;
 import mf.fit.repository.ObavjestenjeRepository;
 import mf.fit.repository.StanarRepository;
 import mf.fit.repository.UlazRepository;
 
 import java.time.LocalDateTime;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +54,29 @@ public class ObavjestenjeService {
 
     public Obavjestenje getById(Long id) {
         return repository.findById(id);
+    }
+
+    @Transactional
+    public Obavjestenje getByIdWithLoadedFiles(Long id) {
+        Obavjestenje obavjestenje = repository.findById(id);
+        if (obavjestenje == null) {
+            return null;
+        }
+
+        // Ucitavamo ManyToMany listu dok je entitet jos u transakciji.
+        List<UploadedFile> uploadedFiles = obavjestenje.getUploadedFiles();
+        uploadedFiles.size();
+        if (obavjestenje.getStanari() != null) {
+            obavjestenje.getStanari().size();
+        }
+
+        // Za svaki UploadedFile pravimo File objekat iz putanje sacuvane u filename.
+        for (UploadedFile uploadedFile : uploadedFiles) {
+            if (uploadedFile.getFilename() != null && !uploadedFile.getFilename().isBlank()) {
+                uploadedFile.setFile(new File(uploadedFile.getFilename()));
+            }
+        }
+        return obavjestenje;
     }
 
     @Transactional
@@ -181,3 +210,4 @@ public class ObavjestenjeService {
         return ulaz;
     }
 }
+

@@ -1,8 +1,13 @@
+/*
+ * Komentar projekta: JPA entitet koji predstavlja tabelu u bazi i opisuje podatke domena aplikacije.
+ */
+
 package mf.fit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,7 +41,14 @@ public class Obavjestenje {
     @JsonIgnoreProperties({"stan", "timezoneInfos", "currencyResponses", "password"})
     private List<Stanar> stanari;
 
-
+    // Trazeni dio zadatka: Obavjestenje kao entitet X ima ManyToMany listu uploadovanih fajlova.
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "obavjestenje_uploaded_file",
+            joinColumns = @JoinColumn(name = "obavjestenje_id"),
+            inverseJoinColumns = @JoinColumn(name = "uploaded_file_id")
+    )
+    private List<UploadedFile> uploadedFiles = new ArrayList<>();
 
     // GETTERS & SETTERS
     public Long getId() { return id; }
@@ -60,4 +72,8 @@ public class Obavjestenje {
 
     public List<Stanar> getStanari() { return stanari; }
     public void setStanari(List<Stanar> stanari) { this.stanari = stanari; }
+
+    public List<UploadedFile> getUploadedFiles() { return uploadedFiles; }
+    public void setUploadedFiles(List<UploadedFile> uploadedFiles) { this.uploadedFiles = uploadedFiles; }
 }
+

@@ -1,5 +1,10 @@
+/*
+ * Komentar projekta: Page komponenta koja predstavlja stranicu za pregled, slanje i upravljanje prilozima obavjestenja.
+ */
+
 import { useEffect, useMemo, useState } from 'react'
-import { Archive, Pencil, Plus, Send, Trash2 } from 'lucide-react'
+import { Archive, Download, FileText, Paperclip, Pencil, Plus, Send, Trash2, Upload } from 'lucide-react'
+import { getApiMessage } from '../api/axiosClient.js'
 import { obavjestenjaApi } from '../api/obavjestenjaApi.js'
 import { stanariApi } from '../api/stanariApi.js'
 import Badge from '../components/ui/Badge.jsx'
@@ -12,10 +17,12 @@ import SearchInput from '../components/ui/SearchInput.jsx'
 import FormCheckbox from '../components/forms/FormCheckbox.jsx'
 import FormInput from '../components/forms/FormInput.jsx'
 import { useToast } from '../context/ToastContext.jsx'
+import { useRole } from '../context/RoleContext.jsx'
 import { mockObavjestenja, mockStanari } from '../data/mockData.js'
 import { date, fullName, nextLocalId, statusVariant } from '../utils/formatters.js'
 
 const initialForm = {
+  // Pocetno stanje forme za kreiranje ili izmjenu obavjestenja.
   naslov: '',
   tekst: '',
   sendAll: true,
@@ -24,6 +31,7 @@ const initialForm = {
 
 export default function Obavjestenja() {
   const { showToast } = useToast()
+  const { role } = useRole()
   const [items, setItems] = useState([])
   const [stanari, setStanari] = useState([])
   const [search, setSearch] = useState('')
@@ -35,9 +43,16 @@ export default function Obavjestenja() {
   const [form, setForm] = useState(initialForm)
   const [errors, setErrors] = useState({})
   const [confirm, setConfirm] = useState(null)
+  const [fileModal, setFileModal] = useState(null)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [fileSaving, setFileSaving] = useState(false)
+  const [fileError, setFileError] = useState('')
+  // Backend dozvoljava upravljanje prilozima samo adminu i starjesini.
+  const canManageFiles = role === 'admin' || role === 'starjesina'
 
   useEffect(() => {
     async function load() {
+      // Ucitavamo obavjestenja i stanare paralelno; ako API ne radi, prikazujemo demo podatke.
       setLoading(true)
       const [obavjestenjaResult, stanariResult] = await Promise.allSettled([
         obavjestenjaApi.list(),
@@ -45,13 +60,14 @@ export default function Obavjestenja() {
       ])
       setItems(obavjestenjaResult.status === 'fulfilled' ? obavjestenjaResult.value : mockObavjestenja)
       setStanari(stanariResult.status === 'fulfilled' ? stanariResult.value : mockStanari)
-      setError(obavjestenjaResult.status === 'rejected' ? 'API nije dostupan za obavještenja. Prikazani su demo podaci.' : '')
+      setError(obavjestenjaResult.status === 'rejected' ? ' Prikazani su demo podaci.' : '')
       setLoading(false)
     }
     load()
   }, [])
 
   const filteredItems = useMemo(() => {
+    // Pretraga se radi lokalno po naslovu, tekstu i tipu obavjestenja.
     const query = search.trim().toLowerCase()
     return items.filter((item) => !query || [item.naslov, item.tekst, item.tip].join(' ').toLowerCase().includes(query))
   }, [items, search])
@@ -77,6 +93,7 @@ export default function Obavjestenja() {
   }
 
   function validate() {
+    // Validacija forme prije slanja prema backend-u.
     const nextErrors = {}
     if (!form.naslov.trim()) nextErrors.naslov = 'Naslov je obavezan.'
     if (!form.tekst.trim()) nextErrors.tekst = 'Tekst je obavezan.'
@@ -99,6 +116,7 @@ export default function Obavjestenja() {
     setSaving(true)
     const recipients = form.sendAll ? stanari : stanari.filter((stanar) => form.stanarIds.includes(stanar.id))
     const payload = {
+      // Backend ocekuje naslov, tekst, tip poruke i listu primalaca.
       naslov: form.naslov,
       tekst: form.tekst,
       tip: form.sendAll ? 'GENERAL' : 'PRIVATE',
@@ -112,6 +130,7 @@ export default function Obavjestenja() {
         id: saved?.id || editing?.id || nextLocalId(items),
         ...payload,
         stanari: recipients,
+        fajlovi: saved?.uploadedFiles || editing?.fajlovi || editing?.uploadedFiles || [],
         kreiranoAt: saved?.kreiranoAt || editing?.kreiranoAt || new Date().toISOString(),
         status: 'Aktivno',
       }
@@ -124,6 +143,7 @@ export default function Obavjestenja() {
         id: editing?.id || nextLocalId(items),
         ...payload,
         stanari: recipients,
+        fajlovi: editing?.fajlovi || editing?.uploadedFiles || [],
         kreiranoAt: editing?.kreiranoAt || new Date().toISOString(),
         status: 'Aktivno',
       }
@@ -152,6 +172,77 @@ export default function Obavjestenja() {
     }
   }
 
+  async function openFiles(item) {
+    // Otvara modal i povlaci svjezu listu priloga za izabrano obavjestenje.
+    setFileModal(item)
+    setSelectedFile(null)
+    setFileError('')
+    try {
+      const fajlovi = await obavjestenjaApi.listFiles(item.id)
+      setItems((current) => current.map((notice) => (notice.id === item.id ? { ...notice, fajlovi } : notice)))
+      setFileModal({ ...item, fajlovi })
+    } catch (error) {
+      setFileError(getApiMessage(error))
+    }
+  }
+
+  async function uploadAttachment() {
+    // Salje izabrani fajl kao multipart/form-data na backend.
+    if (!fileModal || !selectedFile) {
+      setFileError('Izaberite PDF, sliku ili Word dokument.')
+      return
+    }
+    setFileSaving(true)
+    setFileError('')
+    try {
+      const uploaded = await obavjestenjaApi.uploadFile(fileModal.id, selectedFile)
+      const nextFiles = [uploaded, ...(fileModal.fajlovi || [])]
+      setItems((current) => current.map((notice) => (notice.id === fileModal.id ? { ...notice, fajlovi: nextFiles } : notice)))
+      setFileModal({ ...fileModal, fajlovi: nextFiles })
+      setSelectedFile(null)
+      showToast('Fajl je dodat uz obavjestenje.')
+    } catch (error) {
+      setFileError(getApiMessage(error))
+    } finally {
+      setFileSaving(false)
+    }
+  }
+
+  async function downloadAttachment(fajl) {
+    try {
+      const response = await obavjestenjaApi.downloadFile(fajl.id)
+      // Kreira privremeni browser URL za blob i simulira klik na link za download.
+      const url = window.URL.createObjectURL(response.data)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = getFileName(fajl.filename)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      showToast(getApiMessage(error), 'error')
+    }
+  }
+
+  async function removeAttachment(fajlId) {
+    // Brise prilog i lokalno osvjezava listu da UI odmah prikaze novo stanje.
+    if (!fileModal) return
+    setFileSaving(true)
+    setFileError('')
+    try {
+      await obavjestenjaApi.removeFile(fajlId)
+      const nextFiles = (fileModal.fajlovi || []).filter((fajl) => fajl.id !== fajlId)
+      setItems((current) => current.map((notice) => (notice.id === fileModal.id ? { ...notice, fajlovi: nextFiles } : notice)))
+      setFileModal({ ...fileModal, fajlovi: nextFiles })
+      showToast('Fajl je obrisan.')
+    } catch (error) {
+      setFileError(getApiMessage(error))
+    } finally {
+      setFileSaving(false)
+    }
+  }
+
   return (
     <section className="page-stack">
       <PageHeader title="Obavještenja" subtitle="Slanje i pregled obavještenja za stanare i ulaze." actions={<Button icon={Plus} onClick={openCreate}>Dodaj obavještenje</Button>} />
@@ -174,8 +265,10 @@ export default function Obavjestenja() {
               <span>{date(item.kreiranoAt)}</span>
               <span>{item.stanari?.length || 0} primaoca</span>
               <span>{item.tip || 'PRIVATE'}</span>
+              <span>{item.fajlovi?.length || item.uploadedFiles?.length || 0} priloga</span>
             </div>
             <div className="row-actions">
+              <Button variant="secondary" size="sm" icon={Paperclip} onClick={() => openFiles(item)}>Prilozi</Button>
               <Button variant="secondary" size="sm" icon={Archive}>Arhiviraj</Button>
               <Button variant="secondary" size="sm" icon={Pencil} onClick={() => openEdit(item)}>Izmijeni</Button>
               <Button variant="danger" size="sm" icon={Trash2} onClick={() => setConfirm(item)}>Obriši</Button>
@@ -214,7 +307,55 @@ export default function Obavjestenja() {
         </div>
       </Modal>
 
+      <Modal
+        open={Boolean(fileModal)}
+        title={`Prilozi: ${fileModal?.naslov || ''}`}
+        description={canManageFiles ? 'Dodajte PDF, sliku ili Word dokument uz odabrano obavjestenje.' : 'Stanari mogu pregledati i preuzeti priloge.'}
+        onClose={() => setFileModal(null)}
+        footer={<><Button variant="secondary" onClick={() => setFileModal(null)}>Zatvori</Button>{canManageFiles ? <Button loading={fileSaving} icon={Upload} onClick={uploadAttachment}>Dodaj fajl</Button> : null}</>}
+      >
+        <div className="attachment-panel">
+          {canManageFiles ? (
+            <label className="file-drop">
+              <Upload size={20} />
+              <span>{selectedFile ? selectedFile.name : 'Izaberite fajl za upload'}</span>
+              <small>Dozvoljeno: PDF, PNG, JPG, DOC, DOCX. Maksimalno 10 MB.</small>
+              <input
+                type="file"
+                accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,application/pdf,image/png,image/jpeg,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={(event) => setSelectedFile(event.target.files?.[0] || null)}
+              />
+            </label>
+          ) : null}
+          <ErrorMessage message={fileError} />
+          <div className="attachment-list">
+            {(fileModal?.fajlovi || []).length ? fileModal.fajlovi.map((fajl) => (
+              <div className="attachment-item" key={fajl.id}>
+                <FileText size={18} />
+                <div>
+                  <strong>{getFileName(fajl.filename)}</strong>
+                  <span>UploadedFile zapis povezan preko ManyToMany relacije</span>
+                </div>
+                <Button variant="ghost" size="icon" aria-label="Preuzmi fajl" icon={Download} onClick={() => downloadAttachment(fajl)} />
+                {canManageFiles ? <Button variant="ghost" size="icon" aria-label="Obrisi fajl" icon={Trash2} onClick={() => removeAttachment(fajl.id)} disabled={fileSaving} /> : null}
+              </div>
+            )) : (
+              <div className="attachment-empty">
+                <Paperclip size={20} />
+                <p>Ovo obavjestenje jos nema priloge.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </Modal>
+
       <ConfirmDialog open={Boolean(confirm)} title="Obriši obavještenje" message={`Da li želite obrisati obavještenje "${confirm?.naslov}"?`} loading={saving} onCancel={() => setConfirm(null)} onConfirm={remove} />
     </section>
   )
 }
+
+function getFileName(path) {
+  if (!path) return 'fajl'
+  return String(path).split(/[\\/]/).pop() || 'fajl'
+}
+
