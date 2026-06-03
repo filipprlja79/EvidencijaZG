@@ -2,6 +2,7 @@ package mf.fit.entity;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class DetaljiStana {
 
     @OneToOne
     @JoinColumn(name = "stan_id")
+    @JsonIgnoreProperties({"detalji"})
     private Stan stan;
 
     // GETTERI I SETTERI

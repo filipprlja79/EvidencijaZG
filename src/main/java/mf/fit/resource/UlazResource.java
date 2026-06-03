@@ -1,5 +1,6 @@
 package mf.fit.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import mf.fit.entity.Ulaz;
 import mf.fit.service.UlazService;
 
@@ -20,6 +21,7 @@ public class UlazResource {
 
     // GET ALL
     @GET
+    @RolesAllowed({"admin", "starjesina"})
     public List<Ulaz> list() {
         return service.list();
     }
@@ -27,6 +29,7 @@ public class UlazResource {
     // GET BY ID
     @GET
     @Path("/{id}")
+    @RolesAllowed({"admin", "starjesina", "stanar"})
     public Response getById(@PathParam("id") Long id) {
         try {
             Ulaz ulaz = service.getById(id);
@@ -40,6 +43,7 @@ public class UlazResource {
 
     // CREATE
     @POST
+    @RolesAllowed("admin")
     public Response create(Ulaz ulaz) {
         Ulaz created = service.create(ulaz);
         return Response.status(Response.Status.CREATED)
@@ -50,6 +54,7 @@ public class UlazResource {
     // UPDATE
     @PUT
     @Path("/{id}")
+    @RolesAllowed("admin")
     public Response update(@PathParam("id") Long id, Ulaz ulaz) {
         try {
             Ulaz updated = service.update(id, ulaz);
@@ -64,6 +69,7 @@ public class UlazResource {
     // DELETE
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("admin")
     public Response delete(@PathParam("id") Long id) {
         try {
             service.delete(id);

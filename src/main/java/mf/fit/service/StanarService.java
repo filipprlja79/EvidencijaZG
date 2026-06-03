@@ -26,6 +26,10 @@ public class StanarService {
         return repository.findAll();
     }
 
+    public List<Stanar> listByUlaz(Long ulazId) {
+        return repository.findByUlazId(ulazId);
+    }
+
     // READ BY ID
     public Stanar getById(Long id) {
         Stanar stanar = repository.findById(id);

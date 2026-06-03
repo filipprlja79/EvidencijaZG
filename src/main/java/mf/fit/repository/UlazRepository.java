@@ -27,6 +27,36 @@ public class UlazRepository {
         return em.find(Ulaz.class, id);
     }
 
+    public List<Ulaz> findByZgradaId(Long zgradaId) {
+        return em.createQuery("SELECT u FROM Ulaz u WHERE u.zgrada.id = :zgradaId ORDER BY u.brojUlaza", Ulaz.class)
+                .setParameter("zgradaId", zgradaId)
+                .getResultList();
+    }
+
+    public Ulaz findByZgradaAndIdentifier(Long zgradaId, String brojUlaza, String nazivUlaza) {
+        String normalizedBroj = normalize(brojUlaza);
+        String normalizedNaziv = normalize(nazivUlaza);
+        if (zgradaId == null || (normalizedBroj == null && normalizedNaziv == null)) {
+            return null;
+        }
+
+        List<Ulaz> result = em.createQuery("""
+                        SELECT u FROM Ulaz u
+                        WHERE u.zgrada.id = :zgradaId
+                          AND (
+                            (:brojUlaza IS NOT NULL AND LOWER(u.brojUlaza) = LOWER(:brojUlaza))
+                            OR (:nazivUlaza IS NOT NULL AND LOWER(u.nazivUlaza) = LOWER(:nazivUlaza))
+                          )
+                        ORDER BY u.id
+                        """, Ulaz.class)
+                .setParameter("zgradaId", zgradaId)
+                .setParameter("brojUlaza", normalizedBroj)
+                .setParameter("nazivUlaza", normalizedNaziv)
+                .setMaxResults(1)
+                .getResultList();
+        return result.isEmpty() ? null : result.get(0);
+    }
+
     @Transactional
     public Ulaz update(Long id, Ulaz updatedUlaz) {
         Ulaz existing = em.find(Ulaz.class, id);
@@ -50,5 +80,9 @@ public class UlazRepository {
         if (ulaz != null) {
             em.remove(ulaz);
         }
+    }
+
+    private String normalize(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 
@@ -19,9 +20,11 @@ public class Stan {
 
     @ManyToOne
     @JoinColumn(name = "ulaz_id")
+    @JsonIgnoreProperties({"zgrada"})
     private Ulaz ulaz;
 
     @OneToOne(mappedBy = "stan")
+    @JsonIgnoreProperties({"stan"})
     private DetaljiStana detalji;
     public int getBrojStana() {
         return brojStana;

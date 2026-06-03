@@ -17,11 +17,25 @@ public class ObavjestenjeRepository {
     }
 
     public List<Obavjestenje> list() {
-        return em.createQuery("from Obavjestenje", Obavjestenje.class).getResultList();
+        return em.createQuery("SELECT o FROM Obavjestenje o ORDER BY o.kreiranoAt DESC", Obavjestenje.class).getResultList();
     }
 
     public Obavjestenje findById(Long id) {
         return em.find(Obavjestenje.class, id);
+    }
+
+    public List<Obavjestenje> findVisibleForStanar(Long stanarId, Long ulazId) {
+        return em.createQuery("""
+                        SELECT DISTINCT o FROM Obavjestenje o
+                        LEFT JOIN o.stanari s
+                        WHERE o.tip = 'GENERAL'
+                           OR (o.tip = 'ENTRANCE' AND o.ulaz.id = :ulazId)
+                           OR (o.tip = 'PRIVATE' AND s.id = :stanarId)
+                        ORDER BY o.kreiranoAt DESC
+                        """, Obavjestenje.class)
+                .setParameter("stanarId", stanarId)
+                .setParameter("ulazId", ulazId)
+                .getResultList();
     }
 
     public void delete(Long id) {

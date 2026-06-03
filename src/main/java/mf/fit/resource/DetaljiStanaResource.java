@@ -1,5 +1,6 @@
 package mf.fit.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,17 +18,20 @@ public class DetaljiStanaResource {
     DetaljiStanaService service;
 
     @GET
+    @RolesAllowed({"admin", "starjesina"})
     public List<DetaljiStana> getAll() {
         return service.list();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"admin", "starjesina", "stanar"})
     public DetaljiStana getById(@PathParam("id") Long id) {
         return service.getById(id);
     }
 
     @POST
+    @RolesAllowed("admin")
     public Response create(DetaljiStana entity) {
         service.create(entity);
         return Response.status(Response.Status.CREATED).build();
@@ -35,6 +39,7 @@ public class DetaljiStanaResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed("admin")
     public Response update(@PathParam("id") Long id, DetaljiStana d) {
         service.update(id, d);
         return Response.ok().build();
@@ -42,6 +47,7 @@ public class DetaljiStanaResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("admin")
     public Response delete(@PathParam("id") Long id) {
         service.delete(id);
         return Response.ok().build();

@@ -24,6 +24,10 @@ public class StanService {
         return repository.findAll();
     }
 
+    public List<Stan> listByUlaz(Long ulazId) {
+        return repository.findByUlazId(ulazId);
+    }
+
     public Stan getById(Long id) {
         return repository.findById(id);
     }

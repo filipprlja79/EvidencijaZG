@@ -1,5 +1,6 @@
 package mf.fit.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -17,6 +18,7 @@ public class TimezoneResource {
     TimezoneService service;
 
     @GET
+    @RolesAllowed({"admin", "starjesina", "stanar"})
     public Response getTimezoneByIP(@QueryParam("userId") Long userId) {
         if (userId == null) {
             return Response.status(Response.Status.BAD_REQUEST)

@@ -37,8 +37,7 @@ public class CurrencyService {
 
         CurrencyResponse response = convert(from, to, value);
         response.setStanar(stanar);
-        double v = response.getRate() * value;
-        response.setConvertedValue(v * response.getRate());
+        response.setConvertedValue(value * response.getRate());
         stanar.getCurrencyResponses().add(response);
 
         return response;

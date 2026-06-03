@@ -39,11 +39,14 @@ public class ZgradaResource {
 
     @GET
     @Path("/pretraga")
-    public Response pretraziPoGradu(@QueryParam("grad") String grad) {
+    public Response pretraziPoGradu(@QueryParam("grad") String grad, @QueryParam("naselje") String naselje) {
         if (grad == null || grad.isBlank()) {
             return Response.status(400).entity("Parametar 'grad' je obavezan").build();
         }
-        return Response.ok(service.findByGrad(grad)).build();
+        List<Zgrada> result = service.findByGrad(grad).stream()
+                .filter(z -> naselje == null || naselje.isBlank() || naselje.equals(z.getNaselje()))
+                .toList();
+        return Response.ok(result).build();
     }
 
     @GET

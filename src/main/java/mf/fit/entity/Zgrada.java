@@ -1,5 +1,6 @@
 package mf.fit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -13,8 +14,10 @@ public class Zgrada {
     private String naziv;
     private String vlasnik;
     private String grad;
+    private String naselje;
 
     @OneToMany(mappedBy = "zgrada", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Ulaz> ulazi;
 
     public Long getId() {
@@ -43,6 +46,14 @@ public class Zgrada {
 
     public void setGrad(String grad) {
         this.grad = grad;
+    }
+
+    public String getNaselje() {
+        return naselje;
+    }
+
+    public void setNaselje(String naselje) {
+        this.naselje = naselje;
     }
 
     public List<Ulaz> getUlazi() {

@@ -27,6 +27,30 @@ public class StanRepository {
         return em.find(Stan.class, id);
     }
 
+    public List<Stan> findByUlazId(Long ulazId) {
+        return em.createQuery("SELECT s FROM Stan s WHERE s.ulaz.id = :ulazId ORDER BY s.brojStana", Stan.class)
+                .setParameter("ulazId", ulazId)
+                .getResultList();
+    }
+
+    public Stan findByUlazAndBroj(Long ulazId, Integer brojStana) {
+        if (ulazId == null || brojStana == null) {
+            return null;
+        }
+
+        List<Stan> result = em.createQuery("""
+                        SELECT s FROM Stan s
+                        WHERE s.ulaz.id = :ulazId
+                          AND s.brojStana = :brojStana
+                        ORDER BY s.id
+                        """, Stan.class)
+                .setParameter("ulazId", ulazId)
+                .setParameter("brojStana", brojStana)
+                .setMaxResults(1)
+                .getResultList();
+        return result.isEmpty() ? null : result.get(0);
+    }
+
     @Transactional
     public Stan update(Long id, Stan updatedStan) {
         Stan existing = em.find(Stan.class, id);

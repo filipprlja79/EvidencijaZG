@@ -1,5 +1,6 @@
 package mf.fit.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import mf.fit.entity.Stanar;
 import mf.fit.service.StanarService;
 
@@ -20,13 +21,22 @@ public class StanarResource {
 
     // GET ALL
     @GET
+    @RolesAllowed({"admin", "starjesina"})
     public List<Stanar> getAll() {
         return service.list();
+    }
+
+    @GET
+    @Path("/ulaz/{ulazId}")
+    @RolesAllowed({"admin", "starjesina", "stanar"})
+    public List<Stanar> getByUlaz(@PathParam("ulazId") Long ulazId) {
+        return service.listByUlaz(ulazId);
     }
 
     // GET BY ID
     @GET
     @Path("/{id}")
+    @RolesAllowed({"admin", "starjesina", "stanar"})
     public Response getById(@PathParam("id") Long id) {
         try {
             Stanar stanar = service.getById(id);
@@ -40,6 +50,7 @@ public class StanarResource {
 
     // CREATE
     @POST
+    @RolesAllowed("admin")
     public Response create(Stanar stanar) {
         Stanar created = service.create(stanar);
         return Response.status(Response.Status.CREATED)
@@ -50,6 +61,7 @@ public class StanarResource {
     // UPDATE
     @PUT
     @Path("/{id}")
+    @RolesAllowed("admin")
     public Response update(@PathParam("id") Long id, Stanar stanar) {
         try {
             Stanar updated = service.update(id, stanar);
@@ -64,6 +76,7 @@ public class StanarResource {
     // DELETE
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("admin")
     public Response delete(@PathParam("id") Long id) {
         try {
             service.delete(id);

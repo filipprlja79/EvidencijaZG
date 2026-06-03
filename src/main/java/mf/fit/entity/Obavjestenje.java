@@ -1,6 +1,8 @@
 package mf.fit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -12,6 +14,18 @@ public class Obavjestenje {
 
     private String naslov;
     private String tekst;
+    private String tip;
+    private LocalDateTime kreiranoAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ulaz_id")
+    @JsonIgnoreProperties({"zgrada"})
+    private Ulaz ulaz;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "posiljalac_id")
+    @JsonIgnoreProperties({"stan", "timezoneInfos", "currencyResponses", "password"})
+    private Stanar posiljalac;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -19,6 +33,7 @@ public class Obavjestenje {
             joinColumns = @JoinColumn(name = "obavjestenje_id"),
             inverseJoinColumns = @JoinColumn(name = "stanar_id")
     )
+    @JsonIgnoreProperties({"stan", "timezoneInfos", "currencyResponses", "password"})
     private List<Stanar> stanari;
 
 
@@ -30,6 +45,18 @@ public class Obavjestenje {
 
     public String getTekst() { return tekst; }
     public void setTekst(String tekst) { this.tekst = tekst; }
+
+    public String getTip() { return tip; }
+    public void setTip(String tip) { this.tip = tip; }
+
+    public LocalDateTime getKreiranoAt() { return kreiranoAt; }
+    public void setKreiranoAt(LocalDateTime kreiranoAt) { this.kreiranoAt = kreiranoAt; }
+
+    public Ulaz getUlaz() { return ulaz; }
+    public void setUlaz(Ulaz ulaz) { this.ulaz = ulaz; }
+
+    public Stanar getPosiljalac() { return posiljalac; }
+    public void setPosiljalac(Stanar posiljalac) { this.posiljalac = posiljalac; }
 
     public List<Stanar> getStanari() { return stanari; }
     public void setStanari(List<Stanar> stanari) { this.stanari = stanari; }

@@ -1,5 +1,6 @@
 package mf.fit.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -18,6 +19,7 @@ public class CurrencyResource {
 
     @GET
     @Path("/currency")
+    @RolesAllowed({"admin", "starjesina", "stanar"})
     public Response convert(@QueryParam("from") String from,
                             @QueryParam("to") String to,
                             @QueryParam("value") Double value) {
@@ -31,6 +33,7 @@ public class CurrencyResource {
 
     @GET
     @Path("/currencyConversion")
+    @RolesAllowed({"admin", "starjesina", "stanar"})
     public Response convertAndSave(@QueryParam("from") String from,
                                    @QueryParam("to") String to,
                                    @QueryParam("value") Double value,
