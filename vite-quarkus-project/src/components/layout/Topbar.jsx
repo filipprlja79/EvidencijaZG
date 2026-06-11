@@ -2,11 +2,14 @@
  * Komentar projekta: Layout komponenta koja gradi osnovni raspored aplikacije, navigaciju i gornju traku.
  */
 
-import { Bell, Menu, Plus } from 'lucide-react'
-import { useLocation } from 'react-router-dom'
+import { Bell, LogOut, Menu, Plus } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext.jsx'
 import { useRole } from '../../context/RoleContext.jsx'
 import Button from '../ui/Button.jsx'
 import SearchInput from '../ui/SearchInput.jsx'
+import { useToast } from '../../context/ToastContext.jsx'
+import { useState } from 'react'
 
 const breadcrumbLabels = {
   '/dashboard': 'Dashboard',
@@ -26,9 +29,29 @@ const breadcrumbLabels = {
 }
 
 export default function Topbar({ onMenuClick, search, onSearchChange }) {
+  const [switchingRole, setSwitchingRole] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const { role, roles, setRole } = useRole()
+  const { logout, profile, switchDemoRole } = useAuth()
+  const { showToast } = useToast()
   const current = breadcrumbLabels[location.pathname] || 'Dashboard'
+  const initials = profile ? `${profile.ime?.[0] || ''}${profile.prezime?.[0] || ''}`.toUpperCase() : roles.find((item) => item.value === role)?.initials
+
+  async function handleRoleChange(event) {
+    const nextRole = event.target.value
+    setSwitchingRole(true)
+    try {
+      await switchDemoRole(nextRole)
+      setRole(nextRole)
+      navigate('/dashboard', { replace: true })
+      showToast(`Prebaceni ste na ulogu: ${roles.find((item) => item.value === nextRole)?.label || nextRole}.`)
+    } catch (err) {
+      showToast(err?.message || 'Promjena uloge nije uspjela.', 'error')
+    } finally {
+      setSwitchingRole(false)
+    }
+  }
 
   return (
     <header className="topbar">
@@ -38,7 +61,7 @@ export default function Topbar({ onMenuClick, search, onSearchChange }) {
       <div className="topbar-actions">
         <label className="role-select" aria-label="Odaberi ulogu">
           <span>Uloga</span>
-          <select value={role} onChange={(event) => setRole(event.target.value)}>
+          <select value={role} onChange={handleRoleChange} disabled={switchingRole}>
             {roles.map((item) => (
               <option key={item.value} value={item.value}>{item.label}</option>
             ))}
@@ -46,7 +69,18 @@ export default function Topbar({ onMenuClick, search, onSearchChange }) {
         </label>
         <Button icon={Plus}>Dodaj</Button>
         <button className="icon-button" aria-label="Notifikacije"><Bell size={18} /></button>
-        <div className="avatar">{roles.find((item) => item.value === role)?.initials || 'BM'}</div>
+        <button
+          className="icon-button"
+          aria-label="Odjavi se"
+          title="Odjavi se"
+          onClick={() => {
+            logout()
+            navigate('/login', { replace: true })
+          }}
+        >
+          <LogOut size={18} />
+        </button>
+        <div className="avatar">{initials || 'BM'}</div>
       </div>
     </header>
   )

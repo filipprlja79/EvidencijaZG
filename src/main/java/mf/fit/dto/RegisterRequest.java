@@ -7,6 +7,7 @@ package mf.fit.dto;
 public record RegisterRequest(
         String email,
         String password,
+        String confirmPassword,
         Integer roleCode,
         String ime,
         String prezime,

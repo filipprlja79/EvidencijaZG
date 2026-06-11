@@ -61,7 +61,10 @@ public class PublicLookupResource {
     @Path("/ulazi")
     public List<LookupOption> ulazi(@QueryParam("zgradaId") Long zgradaId) {
         if (zgradaId == null) {
-            return List.of();
+            return ulazRepository.findAll().stream()
+                    .filter(ulaz -> ulaz.getZgrada() != null)
+                    .map(this::toLookup)
+                    .toList();
         }
         return ulazRepository.findByZgradaId(zgradaId).stream()
                 .map(this::toLookup)
@@ -91,10 +94,22 @@ public class PublicLookupResource {
     }
 
     private LookupOption toLookup(Ulaz ulaz) {
-        String label = ulaz.getNazivUlaza() == null || ulaz.getNazivUlaza().isBlank()
-                ? "Ulaz " + ulaz.getBrojUlaza()
-                : ulaz.getNazivUlaza();
-        return new LookupOption(ulaz.getId(), label, ulaz.getBrojZiroRacuna());
+        String label;
+        if (ulaz.getNazivUlaza() != null && !ulaz.getNazivUlaza().isBlank()) {
+            label = ulaz.getNazivUlaza();
+        } else if (ulaz.getBrojUlaza() != null && !ulaz.getBrojUlaza().isBlank()) {
+            label = "Ulaz " + ulaz.getBrojUlaza();
+        } else {
+            label = "Ulaz " + ulaz.getId();
+        }
+        Zgrada zgrada = ulaz.getZgrada();
+        String description = zgrada == null
+                ? ulaz.getBrojZiroRacuna()
+                : String.join(" / ",
+                        zgrada.getNaziv() == null ? "" : zgrada.getNaziv(),
+                        zgrada.getGrad() == null ? "" : zgrada.getGrad()
+                ).replaceAll("(^ / | / $)", "");
+        return new LookupOption(ulaz.getId(), label, description);
     }
 
     private LookupOption toLookup(Stan stan) {

@@ -39,6 +39,7 @@ nb-configuration.xml
 # Local environment
 .env
 quarkus-dev.log
+quarkus-dev.err.log
 quarkus-run-current.log
 uploads/
 

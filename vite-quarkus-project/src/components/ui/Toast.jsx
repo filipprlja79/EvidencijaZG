@@ -2,11 +2,12 @@
  * Komentar projekta: Reusable UI komponenta koja daje jedinstven izgled dugmadi, modala, tabela i poruka.
  */
 
-import { AlertCircle, CheckCircle2, Info } from 'lucide-react'
+import { AlertCircle, AlertTriangle, CheckCircle2, Info } from 'lucide-react'
 
 const iconMap = {
   success: CheckCircle2,
   error: AlertCircle,
+  warning: AlertTriangle,
   info: Info,
 }
 

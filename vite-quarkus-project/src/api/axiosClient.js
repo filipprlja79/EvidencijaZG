@@ -16,26 +16,22 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-  // Ako postoji pravi token iz login procesa, on ima prioritet nad demo autentifikacijom.
   const token = localStorage.getItem('building_manager_token') || localStorage.getItem('moja_zgrada_token')
   if (token) {
     config.headers.Authorization = token.startsWith('Basic ') ? token : `Bearer ${token}`
-  } else {
-    // U demo rezimu backend prihvata Basic naloge: admin/starjesina/stanar sa demo lozinkom.
-    const role = localStorage.getItem('building_manager_role') || 'admin'
-    config.headers.Authorization = `Basic ${window.btoa(`${role}:Demo12345!`)}`
   }
   return config
 })
 
 export function getApiMessage(error) {
-  // Normalizuje razlicite formate gresaka iz backend-a u jednu poruku za UI.
   const data = error?.response?.data
-  if (typeof data === 'string') return data
+  if (typeof data === 'string' && data.trim()) return data
   if (data?.message) return data.message
   if (data?.error) return data.error
-  return 'Došlo je do greške. Pokušajte ponovo.'
+  if (error?.response?.status === 409) return 'Nalog sa ovim emailom vec postoji. Prijavite se ili koristite drugi email.'
+  if (error?.response?.status === 401) return 'Email ili sifra nijesu ispravni.'
+  if (error?.response?.status === 400) return 'Provjerite unesene podatke.'
+  return 'Doslo je do greske. Pokusajte ponovo.'
 }
 
 export default axiosClient
-

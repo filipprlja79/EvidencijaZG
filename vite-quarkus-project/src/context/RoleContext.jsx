@@ -2,7 +2,8 @@
  * Komentar projekta: React context koji dijeli globalno stanje kroz aplikaciju bez prop drilling-a.
  */
 
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { useAuth } from './AuthContext.jsx'
 
 export const roles = [
 
@@ -18,7 +19,15 @@ const RoleContext = createContext(null)
 export function RoleProvider({ children }) {
 
   const [role, setRoleState] = useState(() => localStorage.getItem('building_manager_role') || 'admin')
+  const { profile } = useAuth()
+  const effectiveRole = profile?.role || role
 
+  useEffect(() => {
+    if (profile?.role) {
+      setRoleState(profile.role)
+      localStorage.setItem('building_manager_role', profile.role)
+    }
+  }, [profile])
 
   function setRole(nextRole) {
     setRoleState(nextRole)
@@ -26,9 +35,9 @@ export function RoleProvider({ children }) {
 
   }
 
-  const activeRole = roles.find((item) => item.value === role) || roles[0]
+  const activeRole = roles.find((item) => item.value === effectiveRole) || roles[0]
 
-  const value = useMemo(() => ({ role, activeRole, roles, setRole }), [role, activeRole])
+  const value = useMemo(() => ({ role: effectiveRole, activeRole, roles, setRole }), [effectiveRole, activeRole])
 
   return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>
 
@@ -45,4 +54,3 @@ export function useRole() {
   }
   return context
 }
-

@@ -7,6 +7,7 @@ import axiosClient from './axiosClient.js'
 export const obavjestenjaApi = {
   // CRUD i slanje obavjestenja.
   list: async () => (await axiosClient.get('/obavjestenja')).data,
+  listMine: async (stanarId) => (await axiosClient.get(`/obavjestenja/moje/${stanarId}`)).data,
   create: async (payload) => (await axiosClient.post('/obavjestenja', payload)).data,
   send: async (payload) => (await axiosClient.post('/obavjestenja/posalji', payload)).data,
   update: async (id, payload) => (await axiosClient.put(`/obavjestenja/${id}`, payload)).data,

@@ -9,7 +9,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import mf.fit.dto.AuthResponse;
+import mf.fit.dto.ErrorResponse;
 import mf.fit.dto.LoginRequest;
 import mf.fit.dto.RegisterRequest;
 import mf.fit.dto.UserProfileResponse;
@@ -62,14 +65,17 @@ public class AccountService {
 
         String email = request.email().trim().toLowerCase();
         if (stanarRepository.findByEmail(email) != null) {
-            throw new WebApplicationException("Korisnik sa ovim emailom vec postoji u bazi", 409);
+            throw apiError("Nalog sa ovim emailom vec postoji. Prijavite se ili koristite drugi email.", 409);
         }
 
         Stan stan = resolveResidentialSelection(request);
 
         int roleCode = request.roleCode() == null ? 1 : request.roleCode();
+        if (roleCode == 2 && stan == null) {
+            throw apiError("Starjesina mora biti povezan sa ulazom", 400);
+        }
         if (roleCode == 2 && stanarRepository.findStarjesinaByUlazId(stan.getUlaz().getId()) != null) {
-            throw new WebApplicationException("Ovaj ulaz vec ima starjesinu", 409);
+            throw apiError("Ovaj ulaz vec ima starjesinu", 409);
         }
 
         String roleName = roleCode == 2 ? "starjesina" : "stanar";
@@ -104,7 +110,7 @@ public class AccountService {
 
     public AuthResponse login(LoginRequest request) {
         if (request == null || isBlank(request.email()) || isBlank(request.password())) {
-            throw new WebApplicationException("Email i password su obavezni", 400);
+            throw apiError("Email i password su obavezni", 400);
         }
 
         String email = request.email().trim().toLowerCase();
@@ -128,7 +134,7 @@ public class AccountService {
         } else if (keycloakService.accessTokenHasRole(token, "admin")) {
             profile = userProfileService.adminProfile(email);
         } else {
-            throw new WebApplicationException("Nalog postoji u Keycloak-u, ali nema lokalni profil aplikacije", 403);
+            throw apiError("Nalog postoji u Keycloak-u, ali nema lokalni profil aplikacije", 403);
         }
 
         return new AuthResponse(
@@ -143,7 +149,7 @@ public class AccountService {
     private AuthResponse demoLogin(String email, String password) {
         Stanar stanar = stanarRepository.findByEmail(email);
         if (stanar == null || !demoPasswordService.matches(email, password, stanar.getPassword())) {
-            throw new WebApplicationException("Email ili password nijesu ispravni", 401);
+            throw apiError("Email ili password nijesu ispravni", 401);
         }
 
         String basicPrincipal = switch (stanar.getTipNaloga() == null ? 1 : stanar.getTipNaloga()) {
@@ -168,44 +174,49 @@ public class AccountService {
 
     private void validateRegisterRequest(RegisterRequest request) {
         if (request == null) {
-            throw new WebApplicationException("Podaci za registraciju su obavezni", 400);
+            throw apiError("Podaci za registraciju su obavezni", 400);
         }
         if (isBlank(request.email()) || !request.email().contains("@")) {
-            throw new WebApplicationException("Email nije validan", 400);
+            throw apiError("Email nije validan", 400);
         }
         if (isBlank(request.password()) || request.password().length() < 8) {
-            throw new WebApplicationException("Password mora imati najmanje 8 karaktera", 400);
+            throw apiError("Password mora imati najmanje 8 karaktera", 400);
         }
-        if (request.roleCode() == null || (request.roleCode() != 1 && request.roleCode() != 2)) {
-            throw new WebApplicationException("Uloga mora biti stanar ili starjesina ulaza", 400);
+        if (!request.password().equals(request.confirmPassword())) {
+            throw apiError("Password i potvrda passworda se ne poklapaju", 400);
+        }
+        if (isWeakPassword(request.password())) {
+            throw apiError("Password mora imati veliko slovo, malo slovo, broj i specijalni karakter", 400);
+        }
+        if (request.roleCode() != null && request.roleCode() != 1 && request.roleCode() != 2) {
+            throw apiError("Uloga mora biti stanar ili starjesina ulaza", 400);
         }
         if (isBlank(request.ime()) || isBlank(request.prezime())) {
-            throw new WebApplicationException("Ime i prezime su obavezni", 400);
+            throw apiError("Ime i prezime su obavezni", 400);
         }
-        if (hasId(request.stanId())) {
-            return;
+        if (!hasId(request.ulazId())) {
+            throw apiError("Ulaz je obavezan", 400);
         }
-        if (!hasId(request.ulazId()) && !hasId(request.zgradaId())) {
-            if (isBlank(request.grad())) {
-                throw new WebApplicationException("Grad je obavezan", 400);
-            }
-            if (isBlank(request.zgradaNaziv())) {
-                throw new WebApplicationException("Naziv zgrade je obavezan", 400);
-            }
+        if (!hasId(request.stanId())) {
+            throw apiError("Stan je obavezan", 400);
         }
-        if (!hasId(request.ulazId()) && isBlank(request.brojUlaza()) && isBlank(request.nazivUlaza())) {
-            throw new WebApplicationException("Ulaz je obavezan", 400);
-        }
-        if (request.brojStana() == null || request.brojStana() <= 0) {
-            throw new WebApplicationException("Broj stana je obavezan", 400);
-        }
+    }
+
+    private boolean isWeakPassword(String password) {
+        return password.chars().noneMatch(Character::isUpperCase)
+                || password.chars().noneMatch(Character::isLowerCase)
+                || password.chars().noneMatch(Character::isDigit)
+                || password.chars().noneMatch(ch -> !Character.isLetterOrDigit(ch));
     }
 
     private Stan resolveResidentialSelection(RegisterRequest request) {
         if (hasId(request.stanId())) {
             Stan stan = stanRepository.findById(request.stanId());
             if (stan == null || stan.getUlaz() == null || stan.getUlaz().getZgrada() == null) {
-                throw new WebApplicationException("Morate izabrati validnu zgradu, ulaz i stan", 400);
+                throw apiError("Morate izabrati validnu zgradu, ulaz i stan", 400);
+            }
+            if (hasId(request.ulazId()) && !request.ulazId().equals(stan.getUlaz().getId())) {
+                throw apiError("Izabrani stan ne pripada izabranom ulazu", 400);
             }
             return stan;
         }
@@ -228,10 +239,10 @@ public class AccountService {
         if (hasId(request.ulazId())) {
             Ulaz ulaz = ulazRepository.findById(request.ulazId());
             if (ulaz == null || ulaz.getZgrada() == null) {
-                throw new WebApplicationException("Ulaz nije validan", 400);
+                throw apiError("Ulaz nije validan", 400);
             }
             if (hasId(request.zgradaId()) && !request.zgradaId().equals(ulaz.getZgrada().getId())) {
-                throw new WebApplicationException("Ulaz ne pripada izabranoj zgradi", 400);
+                throw apiError("Ulaz ne pripada izabranoj zgradi", 400);
             }
             return ulaz;
         }
@@ -260,7 +271,7 @@ public class AccountService {
         if (hasId(request.zgradaId())) {
             Zgrada zgrada = zgradaRepository.findById(request.zgradaId());
             if (zgrada == null) {
-                throw new WebApplicationException("Zgrada nije validna", 400);
+                throw apiError("Zgrada nije validna", 400);
             }
             return zgrada;
         }
@@ -294,9 +305,16 @@ public class AccountService {
 
     private String requiredClean(String value, String message) {
         if (isBlank(value)) {
-            throw new WebApplicationException(message, 400);
+            throw apiError(message, 400);
         }
         return value.trim();
+    }
+
+    private WebApplicationException apiError(String message, int status) {
+        return new WebApplicationException(Response.status(status)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new ErrorResponse(message))
+                .build());
     }
 
     private boolean isBlank(String value) {

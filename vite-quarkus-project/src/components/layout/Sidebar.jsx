@@ -19,6 +19,7 @@ import {
   WalletCards,
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext.jsx'
 import { useRole } from '../../context/RoleContext.jsx'
 
 const navItems = [
@@ -39,7 +40,9 @@ const navItems = [
 
 export default function Sidebar({ open, onClose }) {
   const { role, activeRole } = useRole()
+  const { profile } = useAuth()
   const visibleNavItems = navItems.filter((item) => item.roles.includes(role))
+  const fullName = profile ? `${profile.ime || ''} ${profile.prezime || ''}`.trim() : activeRole.label
 
   return (
     <>
@@ -62,7 +65,7 @@ export default function Sidebar({ open, onClose }) {
         <div className="sidebar-user">
           <div className="avatar">{activeRole.initials}</div>
           <div>
-            <strong>{activeRole.label}</strong>
+            <strong>{fullName || activeRole.label}</strong>
             <span>{activeRole.description}</span>
           </div>
         </div>

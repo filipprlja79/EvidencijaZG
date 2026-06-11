@@ -16,6 +16,8 @@ import DataTable from '../components/ui/DataTable.jsx'
 import ErrorMessage from '../components/ui/ErrorMessage.jsx'
 import PageHeader from '../components/ui/PageHeader.jsx'
 import StatCard from '../components/ui/StatCard.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
+import { useRole } from '../context/RoleContext.jsx'
 import {
   mockDugovanja,
   mockObavjestenja,
@@ -37,6 +39,8 @@ const chartData = [
 ]
 
 export default function Dashboard() {
+  const { profile } = useAuth()
+  const { role } = useRole()
   const [state, setState] = useState({
     zgrade: [],
     ulazi: [],
@@ -54,12 +58,17 @@ export default function Dashboard() {
 
     async function load() {
       setLoading(true)
+      const canManageBuilding = role === 'admin' || role === 'starjesina'
+      const canListZgrade = role === 'admin'
+      const ulazId = profile?.ulazId
+      const stanarId = profile?.id
+
       const results = await Promise.allSettled([
-        zgradeApi.list(),
-        ulaziApi.list(),
-        stanoviApi.list(),
-        stanariApi.list(),
-        obavjestenjaApi.list(),
+        canListZgrade ? zgradeApi.list() : Promise.resolve([]),
+        canManageBuilding ? ulaziApi.list() : Promise.resolve(ulazId ? [{ id: ulazId, nazivUlaza: profile?.ulazNaziv, brojUlaza: profile?.brojUlaza }] : []),
+        canManageBuilding ? stanoviApi.list() : ulazId ? stanoviApi.listByUlaz(ulazId) : Promise.resolve([]),
+        canManageBuilding ? stanariApi.list() : ulazId ? stanariApi.listByUlaz(ulazId) : Promise.resolve([]),
+        canManageBuilding ? obavjestenjaApi.list() : stanarId ? obavjestenjaApi.listMine(stanarId) : Promise.resolve([]),
         placanjaApi.list(),
         dugovanjaApi.list(),
       ])
@@ -84,7 +93,7 @@ export default function Dashboard() {
     return () => {
       mounted = false
     }
-  }, [])
+  }, [profile, role])
 
   const totalDebt = state.dugovanja.reduce((sum, item) => sum + Number(item.ukupanDug || 0), 0)
   const paidThisMonth = state.placanja

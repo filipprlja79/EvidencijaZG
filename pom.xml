@@ -104,6 +104,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- BCRYPT PASSWORD HASHING FOR LOCAL FALLBACK ACCOUNTS -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
         <!-- TEST -->
         <dependency>
             <groupId>io.quarkus</groupId>
